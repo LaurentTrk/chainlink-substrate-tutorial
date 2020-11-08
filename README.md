@@ -2,14 +2,16 @@
 
 ## Introduction
 
+Getting the BTC price in dollar from an Ethereum contract was made easy by Chainlink, using their [Aggregator API](https://docs.chain.link/docs/get-the-latest-price). You can get any price feed from aggregated and validated sources, using a couple of Solidity code lines.
 
+When it comes to get the same price feeds from another blockchain, things get a little more complicated...
+
+In this article, we will see how we can get these price feeds from a [Substrate](https://substrate.dev/) blockchain, using the Chainlink Oracle components:
+
+ - We will create an [external adapter](https://docs.chain.link/docs/external-adapters) to get the [aggregated Chainlink Price feeds](https://feeds.chain.link/)
+ - We will see how configure a bridge between our chainlink node and our substrate blockchain, using the [Chainlink Externale Initiator](https://github.com/smartcontractkit/external-initiator) and the [Substrate Adapter](https://github.com/smartcontractkit/substrate-adapter)
+ - And finally, we will declare and use the [Chainlink Pallet](https://github.com/smartcontractkit/chainlink-polkadot/tree/master/pallet-chainlink) in the substrate runtime. 
  
-- Why do this ?
-- Introduce Chainlink Price feed
-- Introduce Chainlink/Substrate bridge
-- Introduce Chainlink External Adapter
-- Describe the whole process
-
 ## Prerequisites
 
 We suppose we are already [running a chainlink node](https://docs.chain.link/docs/running-a-chainlink-node) on the Kovan testnet and [a substrate blockchain](https://substrate.dev/docs/en/tutorials/create-your-first-substrate-chain/) locally.
@@ -507,7 +509,18 @@ Edit the file and add the following `SpecIndex`, `RequestIdentifier` and `DataVe
 
 ### Setup the Chainlink Operator account
 
-TODO
+Do you remember the account we created during the substrate adapter setup ?
+
+This account needs some further configuration :
+- It needs to be fund, in order to callback the substrate blockchain from the substrate adapter
+- It needs to be declared as a Chainlink Operator for the Chainlink Pallet
+
+To do this, we need to add the Operator account to our Polkadot Browser extension:
+- From the extension, select the **Import account from pre-existing seed** 
+- Input the operator account mnemonic phrase (*exhibit increase speed enrich tobacco shove want insane couple mistake industry asthma* in our example)
+
+From the Substrate UI, send some Units to the newly created account, and switch to this account. 
+Now you can call the **registerOperator** extrinsics of the Chainlink Pallet. The operator account is now ready to do his job.
 
 
 ### Time to check everything works !
@@ -545,7 +558,16 @@ Here are some tips to help if you are in trouble:
 
 ## Conclusion
 
-TODO
-* Blah blah blah
-* Give link to resources
-* Thanks ;)
+**Now that you know how to get any price feed from your custom substrate blockchain, you are ready to make your own Defi dApp !**   
+
+You can find the complete example of this tutorial in the [following repository](https://github.com/LaurentTrk/chainlink-substrate-tutorial).
+
+The writing of this tutorial would not have been possible without :
+-  The help of this [video](https://www.youtube.com/watch?v=0rZghy0TIOQ) made by the Polakadot and Chainlink teams
+- This [detailed and original example](https://github.com/smartcontractkit/chainlink-polkadot)
+- This [great workshop](https://www.youtube.com/watch?v=uf1-oOZZNe0) from the [2020 Chainlink Hackathon](https://hack.chain.link/)
+- The support of the [Chainlink Community](https://discord.com/invite/aSK4zew) and especially @PatrickCollins !!
+
+
+*Bridging Chainlink and Substrate has been part of my work for the Ki.Dot Project, my submission to the 2020 Chainlink Hackathon.
+You can find all the details on this project at https://devpost.com/software/ki-dot-a-substrate-based-blockchain-to-help-micro-funding* 
